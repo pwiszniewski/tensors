@@ -1,0 +1,10 @@
+function P = formP (H)
+	 
+	 ## usage: P = formP (H)
+	 ## 
+	 ## Forms a tensor P used in the FOOBI 
+	 ## algorithm
+
+	 
+     
+endfunction

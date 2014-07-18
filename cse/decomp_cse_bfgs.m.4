@@ -1,0 +1,33 @@
+function [] = decomp_cse_bfgs (dim, cplx, guess, normuse)
+	 
+	 ## usage: decomp_cse (dim, cplx, guess, normuse)
+	 ## 
+	 ## 
+	 
+  packing = 0; % mulliken, for dirak change bidiagnorm
+  if (cplx == 1)
+     error('decomp_cse_hub:', 'cplx not supported yet');
+  endif
+
+  maxit = 10000;
+  verb = 2;
+  convcrit = 1;
+  control = {maxit, verb, convcrit};
+
+  if ( guess == 1 )
+    A = load('optresults_cse');
+    EI = A.EI;
+    cvec = A.cvecmin;
+  else
+    EI = csehub(dim);  
+    cvec = vec(rand(dim));
+  endif
+
+  args = {cvec, dim, EI, normuse};
+
+  [ cvecmin, minnorm, conv, iters ] = bfgsmin("bfgs_wrapper", args,  control );
+
+  fprintf("Results dumped to optresults\n");
+  save optresults_cse EI cvecmin;
+
+endfunction
