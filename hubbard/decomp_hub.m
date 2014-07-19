@@ -1,4 +1,4 @@
-function [ normd_new normof_new ] = decomp_hub (dim, cplx)
+function [ EI U_init U ] = decomp_hub (dim, cplx)
 	 
 	 ## usage: EI_new = decomp_hub (dim, cplx)
 	 ## 
@@ -47,7 +47,7 @@ function [ normd_new normof_new ] = decomp_hub (dim, cplx)
 
  ## should be complex matrix with unit columns
  
- U_init * U
+ U_init * U;
 
 endfunction
 

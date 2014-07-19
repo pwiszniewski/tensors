@@ -51,7 +51,6 @@ function [A, Ds] = foobi2 (T,nvemax,emtresh)
 
   %% joint off-diagonalization
   [Q D] = joint_offdiag(B,1e-8);
-  D
   
   Q = Qi * Q;
   F = H * Q;

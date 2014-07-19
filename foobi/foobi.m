@@ -4,8 +4,6 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
 	 ## 
 	 ## Decompose 4-order tensor (Dirak symmetries)
 	 
-  addpath('/home/shiva/octave/jacobi');
-
   dimin = size(T,4);
 
   if (~exist('emtresh','var'))
@@ -41,6 +39,7 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
 
   H = norm_herm(H);
   
+  ## problem here
   P = formP(H);
   [L S R] = svds(P,nvec,1e-6);
   W = unpacktri(R);
@@ -57,7 +56,6 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
 #  [Q D] = joint_diag(W,1e-6);
 
   [Q D] = jacobi(W,1e-8);
-  D
 
 #  Q = Qi * Q;
   F = H * Q;
