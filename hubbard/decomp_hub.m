@@ -1,6 +1,6 @@
 function [ EI U_init U ] = decomp_hub (dim, cplx)
 	 
-	 ## usage: EI_new = decomp_hub (dim, cplx)
+	 ## usage: [ EI_new U_init U ] = decomp_hub (dim, cplx)
 	 ## 
 	 ## Decompose random 4-index tensor of dimension dim x dim x
          ## dim x dim and rank dim

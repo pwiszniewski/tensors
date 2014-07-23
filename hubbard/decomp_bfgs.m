@@ -1,4 +1,4 @@
-function decomp_bfgs (dim, cplx, guess, normuse)
+function [ U_init U EI ] = decomp_bfgs (dim, cplx, guess, normuse)
 	 
 	 ## usage: [ normd normof ] = decomp_bfgs (dim, cplx, guess, normuse)
 	 ## 
@@ -20,15 +20,39 @@ function decomp_bfgs (dim, cplx, guess, normuse)
     EI = A.EI;
     cvec = A.cvecmin;
   else
-    EI = initrandei(dim, cplx, packing);  
-    cvec = vec(rand(dim));
+    [ EI U_init ] = initrandhub(dim, cplx, packing);  
+
+    if (cplx == 1)
+      cvec = rand(dim*dim,1);;
+    else
+      cvec = rand(dim*(dim-1)/2);
+    endif
+
   endif
 
   args = {cvec, dim, EI, packing, normuse};
 
   [ cvecmin, minnorm, conv, iters ] = bfgsmin("bfgs_wrapper", args,  control );
 
-  fprintf("Results dumped to optresults\n");
-  save optresults EI cvecmin;
+#  fprintf("Results dumped to optresults\n");
+#  save optresults EI cvecmin;
 
+  if (cplx == 1)
+    S = vec2triu(cvec(1:dim*(dim+1)/2),dim,0);
+    d = diag(S);
+    S = S + S';
+    S = S - diag(d);
+    A = vec2triu(cvec(dim*(dim+1)/2 + 1:dim*dim),dim,1);
+    A = A - A.';
+  else
+    S = vec2triu(cvec,dim,0);
+    d = diag(S);
+    S = S + S.';
+    S = S - d;
+  endif    
+
+  U = expm(i*S - A);
+
+  EI = t2e(EI,U,packing);
+  
 endfunction

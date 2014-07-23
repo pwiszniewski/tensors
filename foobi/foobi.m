@@ -22,7 +22,8 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
   C = reshape(T,dimin*dimin, dimin*dimin);
 
   [U D] = eig(C);
-  [Ds indD] = sort(diag(D),'descend'); 
+  [Ds indD] = sort(abs(diag(D)),'descend'); 
+#  [Ds indD] = sort(real(diag(D)),'descend'); 
   U = U(:,indD);
   
   %% truncation of non-significant eigenvalues and eigenvectors
@@ -38,24 +39,22 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
   H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
 
   H = norm_herm(H);
-  
-  ## problem here
+
   P = formP(H);
-  [L S R] = svds(P,nvec,1e-6);
-  W = unpacktri(R);
 
-  %% pre-whitening
-#  [Qi w]= eig( W(:,1:nvec) );
-#  W = Qi' * W;
-#  for j = 1:nvec:nvec*nvec
-#      indW = [j:j+nvec-1];
-#      W(:,indW) = W(:,indW) * Qi;
-#  end
+  %% the following may cause problems if the eigenvalues are quite small
+  %% need an idea on how to choose an appropriate guess.
+  %[L S R] = svds(P,nvec,1e-6); 
 
-  %% joint diagonalization
-#  [Q D] = joint_diag(W,1e-6);
+  %% since we do full svd we take only nvec right sing. vectors
 
-  [Q D] = jacobi(W,1e-8);
+  [L S R] = svd(P);
+  [Ss indS] = sort(diag(S),'ascend'); 
+  R = R(:,indS);
+
+  W = unpacktri(R(:,1:nvec));
+
+  [Q L] = jacobi(W,1e-8);
 
 #  Q = Qi * Q;
   F = H * Q;

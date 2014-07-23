@@ -33,7 +33,7 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
   other_normf_old = other_normf + 3*delta;
 
   if (verb > 0) 
-    fprintf(stdout, 'Starting Jacobi iteration. Initial norm %19.4e off-norm: %19.4e\n', normf, other_normf);
+    fprintf(stdout, 'Starting Jacobi iteration. Initial norm %19.4e, off-norm: %19.4e\n', normf, other_normf);
   endif  
   
   it = 0;
