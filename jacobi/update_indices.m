@@ -1,6 +1,6 @@
 function [indx, B, diffB] = update_indices (indx, B, A, k, l)
 	 
-	 ## usage: [indx, B, diffB] = update_indices (indx, B, A, k, l)
+	 ## usage: [indx, B] = update_indices (indx, B, A, k, l)
 	 ## 
 	 ## update vector p and a matrix B
 	 ## B(k,l) contains sums of squares 
@@ -14,14 +14,6 @@ function [indx, B, diffB] = update_indices (indx, B, A, k, l)
  
   matsz = size(A,1);
   nmat = size(A,3);
-
-  ## save previous B
-
-  diffB = zeros(4,matsz);
-  diffB(1,:) = B(k,:);
-  diffB(2,:) = B(l,:);
-  diffB(3,:) = B(:,k).';
-  diffB(4,:) = B(:,l).';
 
   ## update rows
   for n = [k l]
@@ -43,11 +35,4 @@ function [indx, B, diffB] = update_indices (indx, B, A, k, l)
     indx(n) = maxcol(B, n);
   end
 
-  ## get difference
- 
-  diffB(1,:) -= B(k,:);
-  diffB(2,:) -= B(l,:);
-  diffB(3,:) -= B(:,k).';
-  diffB(4,:) -= B(:,l).';
-   
 endfunction

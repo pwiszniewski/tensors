@@ -31,14 +31,20 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
   ## pre-whitening
   [U, A] = init_u(A);
   
-  [indx, B] = init_indices(A)
+  [indx, B] = init_indices(A);
   [normf, other_normf] = get_norms(B, optgoal);
-  other_normf_old = other_normf + 3*delta;
 
   if (verb > 0) 
     fprintf(stdout, 'Starting Jacobi iteration. Initial norm %19.4e, off-norm: %19.4e\n', normf, other_normf);
   endif  
-  
+
+  if (abs(other_normf) < delta)
+     D = A;
+     return
+  endif
+
+  other_normf_old = other_normf + 3*delta;
+
   it = 0;
   while ( (abs(other_normf - other_normf_old) > delta) && (it < maxcyc))
     it += 1;
@@ -52,14 +58,13 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
     l = indx(k);
     pair = [k;l];
     indk = k : matsz : matsz*nmat;
-    indl = l : matsz : matsz*nmat
+    indl = l : matsz : matsz*nmat;
 
     h = form_h(A,k,l);
     
     [c,s] = find_angle(h,optgoal);
     
     R = [c -conj(s) ; s c ];
-
     
     ## apply U * R       
     U(:,pair) = U(:,pair) * R;
@@ -69,11 +74,8 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
     A(:,[indk indl])    = [ c*A(:,indk)+s*A(:,indl) \
 			-conj(s)*A(:,indk)+c*A(:,indl) ] ;
 
-    [indx, B, diffB] = update_indices(indx, B, A, k, l);
-    # [normff, other_normff] = get_norms(B, optgoal);
-    
-    other_normf_old = other_normf;
-    other_normf = update_norm(other_normf, diffB, k, l, optgoal);
+    [indx, B] = update_indices(indx, B, A, k, l);
+    [normff, other_normff] = get_norms(B, optgoal);
     
     if (verb > 1) 
        fprintf(stdout, 'sweep: %d, current off-norm: %19.4e\n', it, other_normf);
