@@ -1,4 +1,4 @@
-function [ indx B ] = init_indices (A)
+function [ indB B ] = init_indices (A)
 	 
 	 ## usage: [ indx B ]= init_indices (A)
 	 ## 
@@ -11,21 +11,21 @@ function [ indx B ] = init_indices (A)
 	 
 	 
   matsz = size(A,1);
-  nmat = size(A,3);
+  nmat = size(A,2)/matsz;
 
   B = zeros(matsz);
 
   for j=1:matsz
     for k=1:matsz
-      v = reshape(A(j,k,:),nmat);
-      B(j,k) = norm(v,'fro')^2;
+      indA = [k:matsz:nmat*matsz];
+      B(j,k) = norm(A(j,indA),'fro')^2;
     end
   end
   
-  indx = zeros(1,matsz);
+  indB = zeros(1,matsz);
   
   for j = 1:matsz
-    indx(j) = maxcol(B, j);
+    indB(j) = maxcol(B, j);
   end
 
 endfunction

@@ -5,9 +5,12 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
 	 ## jacobi iteration for a set of matrices
 	 ##
 
+  if (ndims(b) != 2)
+     error('Data is of wrongly shaped!');
+  end
+
   matsz = size(A,1);
   nmat = size(A,2)/matsz;
-  A = reshape(A,matsz,matsz,nmat);
 
   if (~exist('delta','var'))
      delta = 1e-8;
@@ -28,7 +31,7 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
   ## pre-whitening step
   [U, A] = init_u(A);
   
-  [indx, B] = init_indices(A);
+  [indx, B] = init_indices(A)
   [normf, other_normf] = get_norms(B, optgoal);
   other_normf_old = other_normf + 3*delta;
 
