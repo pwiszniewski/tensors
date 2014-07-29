@@ -56,7 +56,6 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
 
   [Q L] = jacobi(W,1e-8);
 
-#  Q = Qi * Q;
   F = H * Q;
   A = decompF(F);
 
