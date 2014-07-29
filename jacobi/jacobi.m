@@ -5,7 +5,7 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
 	 ## jacobi iteration for a set of matrices
 	 ##
 
-  if (ndims(b) != 2)
+  if (ndims(A) != 2)
      error('Data is of wrongly shaped!');
   end
 
@@ -28,7 +28,7 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
      verb = 1;  
   endif
 
-  ## pre-whitening step
+  ## pre-whitening
   [U, A] = init_u(A);
   
   [indx, B] = init_indices(A)
@@ -50,19 +50,25 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
       endif
     end
     l = indx(k);
+    pair = [k;l];
+    indk = k : matsz : matsz*nmat;
+    indl = l : matsz : matsz*nmat
 
     h = form_h(A,k,l);
     
     [c,s] = find_angle(h,optgoal);
     
-    ## apply R * A * R^h
-    A = rotate_set(A,k,l,c,s);
+    R = [c -conj(s) ; s c ];
+
     
-    ## apply R * U       
-    for j = 1:matsz
-      [U(k,j), U(l,j)] = rotate(U(k,j),U(l,j),c,s);
-    end
+    ## apply U * R       
+    U(:,pair) = U(:,pair) * R;
     
+    ## apply R' * A * R
+    A(pair,:) = R' * A(pair,:);
+    A(:,[indk indl])    = [ c*A(:,indk)+s*A(:,indl) \
+			-conj(s)*A(:,indk)+c*A(:,indl) ] ;
+
     [indx, B, diffB] = update_indices(indx, B, A, k, l);
     # [normff, other_normff] = get_norms(B, optgoal);
     
@@ -78,6 +84,6 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
     fprintf(stdout, 'Finished Jacobi iteration. Sweeps: %d, final off-norm: %19.4e\n', it, other_normf);
   endif  
 
-  D = reshape(A,matsz,matsz*nmat);
+  D = A;
 
 endfunction

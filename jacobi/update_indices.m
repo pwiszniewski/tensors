@@ -26,16 +26,16 @@ function [indx, B, diffB] = update_indices (indx, B, A, k, l)
   ## update rows
   for n = [k l]
     for j=1:matsz
-      v = reshape(A(n,j,:),nmat);
-      B(n,j) = norm(v,'fro')^2;
+      indA = j:matsz:matsz*nmat;
+      B(n,j) = norm(A(n,indA),'fro')^2;
     end
   end
 
   ## update columns
   for n = [k l]
     for j=1:matsz
-      v = reshape(A(j,n,:),nmat);
-      B(j,n) = norm(v,'fro')^2;
+      indA = j:matsz:matsz*nmat;
+      B(j,n) = norm(A(n,indA),'fro')^2;
     end
   end
  

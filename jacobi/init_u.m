@@ -7,18 +7,16 @@ function [ U, A ] = init_u (A)
          ## this transformation to a set A
 	 ##
 
-	 
-  a_herm = 1/2 * (A(:,:,1) + A(:,:,1)');
+  matsz = size(A,1);
+  nmat = size(A,2)/matsz;
+
+  a_herm = 1/2 * (A(:,1:matsz) + A(:,1:matsz)');
 
   ## returns right eigenvectors
   [U d] = eig(a_herm);
   
-  U = U';
-
-  nmat = size(A,3);
-  
   for j=1:nmat
-      A(:,:,j) = U * A(:,:,j) * U';
+      A(:, ((j-1)*matsz + 1) : j*matsz ) = U' * A(:, ((j-1)*matsz + 1) : j*matsz ) * U;
   end
 
 endfunction
