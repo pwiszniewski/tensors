@@ -2,6 +2,9 @@ function pass = checksym (EI, cplx, packing)
 	 
 	 ## usage: pass = checksym (EI, cplx, packing)
 	 ## 
+	 ## packing = 0 - Mulliken
+	 ##         = 1 - Dirak
+	 ##
 	 ## checks symmetries of the supplied EI
 	 ## pass = 0 - all expected symmetries found
 	 ## pass > 0 - some symmetries are broken. Bit wize

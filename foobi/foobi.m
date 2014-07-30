@@ -1,10 +1,19 @@
-function [A, Ds] = foobi (T,nvemax,emtresh)
+function [A, Ds] = foobi (T,isym,nvemax,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
 	 ## Decompose 4-order tensor (Dirak symmetries)
-	 
+	 ## isym - symmetry of the input tensor
+	 ##      = 0 (default) - cumulant
+         ##      = 1 Mulliken
+	 ##      = 2 Dirak
+
   dimin = size(T,4);
+
+  if (~exist('isym','var'))
+     isym = 0;
+     warning('using cumulant symmetry by default');
+  endif 
 
   if (~exist('emtresh','var'))
     emtresh = 1e-8;
@@ -21,9 +30,14 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
   
   C = reshape(T,dimin*dimin, dimin*dimin);
 
-  [U D] = eig(C);
+  if ( (isym == 0) || (isym == 2) )
+    [U D] = eig(C);
+  else
+    [U D UU] = svd(C);
+  end
+
   [Ds indD] = sort(abs(diag(D)),'descend'); 
-#  [Ds indD] = sort(real(diag(D)),'descend'); 
+  #  [Ds indD] = sort(real(diag(D)),'descend'); 
   U = U(:,indD);
   
   %% truncation of non-significant eigenvalues and eigenvectors
@@ -54,7 +68,8 @@ function [A, Ds] = foobi (T,nvemax,emtresh)
 
   W = unpacktri(R(:,1:nvec));
 
-  [Q L] = jacobi(W,1e-8);
+#  [Q L] = jacobi(W,1e-8);
+  [Q L] = joint_diag(W,1e-8);
 
   F = H * Q;
   A = decompF(F);

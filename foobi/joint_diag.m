@@ -81,11 +81,15 @@ s       = 0 ;
 
 
 %% Init
-V       = eye(m);
 encore  = 1; 
 cnt = 0;
 fprintf(stdout,'Joint diag reached. Matrix size %d, nmat %d\n',m,nm/m);
-fflush(stdout);
+%% prewhitening
+[V trash]    = eig(A(:,1:m)+A(:,1:m));
+A = V' * A;
+for p=1:m
+    A(:,(1 + (p-1)*m):p*m) = A(:,(1 + (p-1)*m):p*m) * V;
+end
 
 while encore, encore=0;
   cnt += 1;
@@ -102,7 +106,7 @@ while encore, encore=0;
         c       = sqrt(0.5+angles(1)/2);
         s       = 0.5*(angles(2)-j*angles(3))/c; 
 
-        if (abs(c)>jthresh && cnt < 1000), %%% updates matrices A and V by a Givens%%% rotation
+        if ( (abs(s)>jthresh) && (cnt < 1000) ), %%% updates matrices A and V by a Givens%%% rotation
 
                 encore          = 1 ;
                 pair            = [p;q] ;
@@ -117,12 +121,13 @@ while encore, encore=0;
  end%% p loop
 end%% while
 
-dnorm = norm(A,'fro')^2;
+normA = norm(A,'fro')^2;
+dnorm = normA;
 for p=1:m, Ip = p:m:nm;
   dnorm -= norm(A(p,Ip),'fro')^2;
 end
 
-fprintf(stdout, 'sweeps: %d, diagonal norm: %4.4e, c %4.4e\n',cnt,dnorm,c);
+fprintf(stdout, 'sweeps: %d, off-diagonal norm: %4.4e, full norm: %4.4e, s %4.4e\n',cnt,dnorm,normA,s);
 D = A ;
 
 return

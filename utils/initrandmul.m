@@ -20,12 +20,21 @@ function [T, U, lambda] = initrandmul (dimin, rnk, cplx)
      
 #	 end
 
-	 U = rand(rnk,dimin); 
-	 if (cplx == 1)
-	   U += i*rand(rnk,dimin);
+	 if ( rnk >= dimin )
+	   U = rand(rnk,dimin); 
+	   if (cplx == 1)
+	     U += i*rand(rnk,dimin);
+	   end
+	   U = orth(U);
+	   U = U';
+	 else
+	   U = rand(dimin); 
+	   if (cplx == 1)
+	     U += i*rand(dimin);
+	   end
+	   U = orth(U);
+	   U = U(:,1:rnk);
 	 end
-	 U = orth(U);
-	 U = U';
 
 	 for j = 1:dimin
 	   for k = 1:dimin
