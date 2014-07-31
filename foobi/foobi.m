@@ -73,7 +73,7 @@ function [W D] = foobi (T,isym,nvemax,emtresh)
 #  [Q L] = jacobi(W,1e-8);
 #  [Q L] = joint_diag(W,1e-8);
 
-#  F = H * Q;
-#  A = decompF(F);
+  F = H * Q;
+  A = decompF(F);
 
 endfunction

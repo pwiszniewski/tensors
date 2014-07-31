@@ -96,7 +96,7 @@ for j=1:nsteps
         % determine orthogonalization intervals
         nRS = 0;
         nEntry = 0;         % number of entries into the following loop
-        while ((nEntry < 1) | ((normr < RSTOL) & (nRS < MAXRS)))
+        while ((nEntry < 1) || ((normr < RSTOL) && (nRS < MAXRS)))
             nEntry = nEntry + 1;
             if (normr < RSTOL)  % small subdiagonal detected
 fprintf('\nSmall subdiagonal encountered. Restart ...');
@@ -148,13 +148,13 @@ fprintf('\nSmall subdiagonal encountered. Restart ...');
 		            interNum = interNum + 1;
 		            % find the upper bound
 		            p = k + 1;
-                            while ((p < (j + 1)) & (abs(wCur(p)) >= MIDEPS))
+                            while ((p < (j + 1)) && (abs(wCur(p)) >= MIDEPS))
 			        p = p + 1;	% nearly lost orthogonality
                             end % while
 		            up(interNum) = p - 1;
                             % find the lower bound
 		            p = k - 1;
-                            while ((p > 0) & (abs(wCur(p)) >= MIDEPS))
+                            while ((p > 0) && (abs(wCur(p)) >= MIDEPS))
 			        p = p - 1;	% nearly lost orthogonality
 		            end % while
 		            low(interNum) = p + 1;
@@ -169,7 +169,7 @@ fprintf('\nSmall subdiagonal encountered. Restart ...');
             % Now that we have found interNum of intervals for
             % orthogonalization and their upper and lower bounds
             % are up(i) and low(i), carry out orthogonalization.
-            if ((interNum > 0) | (second == 1))
+            if ((interNum > 0) || (second == 1))
 % fprintf('\northogonalization in iteration %d', j);
 	        for (k = 1:interNum)		% for each interval
 		    for (i = low(k):up(k))
