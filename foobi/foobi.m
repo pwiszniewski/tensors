@@ -1,4 +1,4 @@
-function [A, Ds] = foobi (T,isym,nvemax,emtresh)
+function [Q Di S] = foobi (T,isym,nvemax,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -54,7 +54,7 @@ function [A, Ds] = foobi (T,isym,nvemax,emtresh)
 
   H = norm_herm(H);
 
-  P = formP(H);
+  P = formP(H); %% check this! this is wrong for cumulants
 
   %% the following may cause problems if the eigenvalues are quite small
   %% need an idea on how to choose an appropriate guess.
@@ -63,15 +63,18 @@ function [A, Ds] = foobi (T,isym,nvemax,emtresh)
   %% since we do full svd we take only nvec right sing. vectors
 
   [L S R] = svd(P);
+
   [Ss indS] = sort(diag(S),'ascend'); 
   R = R(:,indS);
 
   W = unpacktri(R(:,1:nvec));
 
-#  [Q L] = jacobi(W,1e-8);
-  [Q L] = joint_diag(W,1e-8);
+  [Q Di] = jacobi_fake(W,1e-8);
 
-  F = H * Q;
-  A = decompF(F);
+#  [Q L] = jacobi(W,1e-8);
+#  [Q L] = joint_diag(W,1e-8);
+
+#  F = H * Q;
+#  A = decompF(F);
 
 endfunction
