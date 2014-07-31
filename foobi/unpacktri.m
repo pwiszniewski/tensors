@@ -24,7 +24,7 @@ function W = unpacktri (R)
 
     %% unpack upper triangle
     for k = 1:nvec-1
-      wj(k,k + 1:nvec) = 2 * R(pos:pos + nvec - 1 - k,j);
+      wj(k,k + 1:nvec) = R(pos:pos + nvec - 1 - k,j);
       pos += nvec - k;
     end
 

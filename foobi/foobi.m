@@ -1,4 +1,4 @@
-function [Q Di S] = foobi (T,isym,nvemax,emtresh)
+function [W D] = foobi (T,isym,nvemax,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -36,8 +36,7 @@ function [Q Di S] = foobi (T,isym,nvemax,emtresh)
     [U D UU] = svd(C);
   end
 
-  [Ds indD] = sort(abs(diag(D)),'descend'); 
-  #  [Ds indD] = sort(real(diag(D)),'descend'); 
+  [Ds indD] = sort(real(diag(D)),'descend'); 
   U = U(:,indD);
   
   %% truncation of non-significant eigenvalues and eigenvectors
