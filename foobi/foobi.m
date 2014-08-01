@@ -1,4 +1,4 @@
-function [F D] = foobi (T,isym,nvemax,emtresh)
+function [A O D] = foobi (T,isym,nvemax,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -75,6 +75,6 @@ function [F D] = foobi (T,isym,nvemax,emtresh)
 #  [Q L] = joint_diag(W,1e-8);
 
   F = H * Q;
-  A = decompF(F);
+  [A O] = decompF(F);
 
 endfunction

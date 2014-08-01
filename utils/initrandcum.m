@@ -6,11 +6,11 @@ function [T, U, lambda] = initrandcum (dimin, rnk, cplx)
 
 	 T = zeros(dimin,dimin,dimin,dimin);
 	 
-#	 lambda = rand(rnk,1);
-	 lambda = zeros(rnk,1);
-	 for j = 1:rnk
-	     lambda(j) = j;
-	 end
+	 lambda = rand(rnk,1);
+#	 lambda = zeros(rnk,1);
+#	 for j = 1:rnk
+#	     lambda(j) = j;
+#	 end
 
 	 if ( rnk >= dimin )
 	   U = rand(rnk,dimin); 
