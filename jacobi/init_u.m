@@ -9,14 +9,15 @@ function [ U, A ] = init_u (A)
 
   matsz = size(A,1);
   nmat = size(A,2)/matsz;
-
-  a_herm = 1/2 * (A(:,1:matsz) + A(:,1:matsz)');
-
-  ## returns right eigenvectors
-  [U d] = eig(a_herm);
   
+  ## find a diagonalizer by congruence (A = Q L Q^T)
+
+  AA = A(:, 1 : matsz )*A(:, matsz + 1:2*matsz);
+  [U d] = eig(AA);
+
+  ## transform by congruence
   for j=1:nmat
-      A(:, ((j-1)*matsz + 1) : j*matsz ) = U' * A(:, ((j-1)*matsz + 1) : j*matsz ) * U;
+      A(:, ((j-1)*matsz + 1) : j*matsz ) = U^(-1) * A(:, ((j-1)*matsz + 1) : j*matsz ) * (U.')^(-1);
   end
 
 endfunction

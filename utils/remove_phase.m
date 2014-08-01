@@ -11,12 +11,27 @@ function mm = remove_phase (m,mode)
   [ nrow ncol ] = size(m);
   
   if (mode == 'c')
-    for j=1:ncol 
-	m(:,j) *= conj( m(2,j) / abs( m(2,j) ) );
+    for j=1:ncol
+
+      for k=1:nrow
+	if( abs(m(k,j)) > 1e-8 )
+	  break
+	end
+      end
+
+      m(:,j) *= conj( m(k,j) / abs( m(k,j) ) );
     end
+
   elseif (mode == 'r')
     for j=1:nrow
-      m(j,:) *= conj( m(j,2) / abs( m(j,2) ) );
+      
+      for k=1:ncol
+	if( abs(m(j,k)) > 1e-8 )
+	  break
+	end
+      end
+      
+      m(j,:) *= conj( m(j,k) / abs( m(j,k) ) );
     end
   else
       error('remove phase','wrong mode: %c',mode);

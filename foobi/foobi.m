@@ -1,4 +1,4 @@
-function [W D] = foobi (T,isym,nvemax,emtresh)
+function [F D] = foobi (T,isym,nvemax,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -49,7 +49,8 @@ function [W D] = foobi (T,isym,nvemax,emtresh)
       nvec = j;
   end
 
-  H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
+  %% H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
+  H =  U(:,1:nvec) * diag( Ds(1:nvec) );
 
   H = norm_herm(H);
 
@@ -68,9 +69,9 @@ function [W D] = foobi (T,isym,nvemax,emtresh)
 
   W = unpacktri(R(:,1:nvec));
 
-  [Q Di] = jacobi_fake(W,1e-8);
+#  [Q Di] = jacobi_fake(W,1e-8);
 
-#  [Q L] = jacobi(W,1e-8);
+  [Q L] = jacobi(W,1e-8);
 #  [Q L] = joint_diag(W,1e-8);
 
   F = H * Q;

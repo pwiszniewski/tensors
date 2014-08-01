@@ -23,8 +23,7 @@ function P = formP (H)
 
   for j = 1:nvec
     hj = reshape(H(:,j),dimin,dimin);      
-    P(:,j) = vec(kron(hj.',hj)) + vec(kron(hj.',hj)) - \
-	     vec(H(:,j)*H(:,j)') - vec(H(:,j)*H(:,j)');
+    P(:,j) = 2 * ( vec(kron(hj.',hj)) - vec(H(:,j)*H(:,j)') );
   end
 
   jk = nvec;
@@ -35,8 +34,8 @@ function P = formP (H)
       jk += 1;
       hk = reshape(H(:,k),dimin,dimin);
 
-      P(:,jk) = vec(kron(hk.',hj)) + vec(kron(hj.',hk)) - \
-		vec(H(:,j)*H(:,k)') - vec(H(:,k)*H(:,j)') ;
+      P(:,jk) = ( vec(kron(hk.',hj)) + vec(kron(hj.',hk)) - \
+		vec(H(:,j)*H(:,k)') - vec(H(:,k)*H(:,j)') ) ;
     end
   end
      

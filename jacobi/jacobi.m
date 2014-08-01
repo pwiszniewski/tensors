@@ -27,21 +27,24 @@ function [ U D ] = jacobi (A, delta, maxcyc, optgoal, verb)
   if (~exist('verb','var'))
      verb = 1;  
   endif
-
-  ## pre-whitening
-  [U, A] = init_u(A);
   
   [indx, B] = init_indices(A);
   [normf, other_normf] = get_norms(B, optgoal);
+  
+  %check for early exit
+  if (other_normf < 1e-6)
+    U = eye(matsz);
+    D = A;
+    fprintf(stdout, 'Diagonal matrix. jacobi exited early\n');    
+    return
+  end
+     
+  ## pre-whitening
+  [U, A] = init_u(A);
 
   if (verb > 0) 
     fprintf(stdout, 'Starting Jacobi iteration. Initial norm %19.4e, off-norm: %19.4e\n', normf, other_normf);
   endif  
-
-  if (abs(other_normf) < delta)
-     D = A;
-     return
-  endif
 
   other_normf_old = other_normf + 3*delta;
 
