@@ -7,7 +7,7 @@ function [ U_init U EI ] = decomp_bfgs (dim, cplx, guess, normuse)
 	 ## normuse = 1 - diagnorm
 	 ##        <> 1 - bidiagnorm
 
-  packing = 0; % mulliken, for dirak change bidiagnorm
+  isym = 1; % mulliken, for dirak change bidiagnorm
 
   maxit = 10000;
   verb = 2;
@@ -20,7 +20,7 @@ function [ U_init U EI ] = decomp_bfgs (dim, cplx, guess, normuse)
     EI = A.EI;
     cvec = A.cvecmin;
   else
-    [ EI U_init ] = initrandhub(dim, cplx, packing);  
+    [ EI U_init ] = initrandhub(dim, cplx, isym);  
 
     if (cplx == 1)
       cvec = rand(dim*dim,1);;
@@ -30,7 +30,7 @@ function [ U_init U EI ] = decomp_bfgs (dim, cplx, guess, normuse)
 
   endif
 
-  args = {cvec, dim, EI, packing, normuse};
+  args = {cvec, dim, EI, isym, normuse};
 
   [ cvecmin, minnorm, conv, iters ] = bfgsmin("bfgs_wrapper", args,  control );
 
@@ -53,6 +53,6 @@ function [ U_init U EI ] = decomp_bfgs (dim, cplx, guess, normuse)
 
   U = expm(i*S - A);
 
-  EI = t2e(EI,U,packing);
+  EI = t2e(EI,U,isym);
   
 endfunction

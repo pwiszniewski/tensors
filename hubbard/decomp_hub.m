@@ -18,7 +18,7 @@ function [ EI U_init U ] = decomp_hub (dim, cplx)
   FA = zeros(dim);
   FB = zeros(dim);
 
-  [ EI U_init ] = initrandhub(dim, cplx, 0);
+  [ EI U_init ] = initrandhub(dim, cplx, 1);
 
   ## Warning! This contraction is only valid for packing = Mulliken
 
@@ -39,11 +39,11 @@ function [ EI U_init U ] = decomp_hub (dim, cplx)
 
  ## transform using U
 
- EI_new = t2e(EI, U, 0);
+ EI_new = t2e(EI, U, 1);
 
  ## offdiagonal norm should be zero, diagonal norm should be 8 x dim 
  
- [ normd_new normof_new ] = bidiagnorm(EI_new, 0)
+ [ normd_new normof_new ] = bidiagnorm(EI_new, 1)
 
  ## should be complex matrix with unit columns
  

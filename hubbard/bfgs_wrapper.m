@@ -1,4 +1,4 @@
-function  normof = bfgs_wrapper (cvec, dim, EI, packing, normuse)
+function  normof = bfgs_wrapper (cvec, dim, EI, isym, normuse)
 	 
 	 ## usage: normof = bfgs_wrapper (cvec, dim, EI)
 	 ## 
@@ -22,12 +22,12 @@ function  normof = bfgs_wrapper (cvec, dim, EI, packing, normuse)
 	 
   U = expm(i*S - A);
 
-  EI_new = t2e(EI,U,packing);
+  EI_new = t2e(EI,U,isym);
   
   if ( normuse == 1 )
-    [ normd normof ] = diagnorm(EI_new,packing);
+    [ normd normof ] = diagnorm(EI_new,isym);
   else
-    [ normd normof ] = bidiagnorm(EI_new,packing);
+    [ normd normof ] = bidiagnorm(EI_new,isym);
   endif
 
 endfunction

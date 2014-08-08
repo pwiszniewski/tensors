@@ -11,7 +11,7 @@ function EI = csehub (dim, cplx)
 
   
   h = oneeh(dim, t, dopbc);
-  EI = initrandhub(dim, cplx, 0);
+  EI = initrandhub(dim, cplx, 1);
   h = h ./ (dim - 1);
 
   for i = 1 : dim

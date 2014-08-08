@@ -5,7 +5,7 @@ function [] = decomp_cse_bfgs (dim, cplx, guess, normuse)
 	 ## normuse = 1 - diagonal norm 
 	 ##        <> 1 - bidiagonal norm
 	 
-  packing = 0; % mulliken, for dirak change bidiagnorm
+  isym = 1; % mulliken, for dirak change bidiagnorm
   if (cplx == 1)
      error('decomp_cse_hub:', 'cplx not supported yet');
   endif
