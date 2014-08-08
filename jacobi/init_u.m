@@ -12,12 +12,12 @@ function [ U, A ] = init_u (A)
   
   ## find a diagonalizer by congruence (A = Q L Q^T)
 
-  AA = A(:, 1 : matsz )*A(:, matsz + 1:2*matsz);
+  AA = A(:, 1 : matsz )*A(:, matsz + 1:2*matsz)^(-1);
   [U d] = eig(AA);
 
   ## transform by congruence
   for j=1:nmat
-      A(:, ((j-1)*matsz + 1) : j*matsz ) = U^(-1) * A(:, ((j-1)*matsz + 1) : j*matsz ) * (U.')^(-1);
+      A(:, ((j-1)*matsz + 1) : j*matsz ) = U^(-1) * A(:, ((j-1)*matsz + 1) : j*matsz ) * U;
   end
 
 endfunction

@@ -1,4 +1,4 @@
-function [A O D] = foobi (T,isym,nvemax,emtresh)
+function [A O] = foobi (T,isym,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -19,29 +19,21 @@ function [A O D] = foobi (T,isym,nvemax,emtresh)
     emtresh = 1e-8;
   endif
 
-  if (~exist('nvemax','var'))
-    nvemax = 6;
-  endif
-  
-  if (nvemax > dimin*dimin)
-     nvemax = dimin*dimin;
-     warning('setting nvemax to maximal possible rank %d', dimin*dimin);
-  endif 
-  
   C = reshape(T,dimin*dimin, dimin*dimin);
 
-  if ( (isym == 0) || (isym == 2) )
-    [U D] = eig(C);
-  else
-    [U D UU] = svd(C);
-  end
+#  if ( (isym == 0) || (isym == 2) )
+#    [U D] = eig(C);
+#  else
+    [U, D, ~] = svd(C);
+#  end
 
+  %% Warning! have to check that eigenvalues are real each time
   [Ds indD] = sort(real(diag(D)),'descend'); 
   U = U(:,indD);
   
   %% truncation of non-significant eigenvalues and eigenvectors
   nvec = 1;
-  for j = 1:nvemax
+  for j = 1:dimin*dimin
       if ( abs(Ds(j)) < emtresh ) 
 	 nvec = j - 1;
 	 break
@@ -49,32 +41,27 @@ function [A O D] = foobi (T,isym,nvemax,emtresh)
       nvec = j;
   end
 
-  %% H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
+  fprintf(stdout, 'foobi: The rank is %d\n', nvec);
+
+#  H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
   H =  U(:,1:nvec) * diag( Ds(1:nvec) );
 
   H = norm_herm(H);
 
-  P = formP(H); %% check this! this is wrong for cumulants
-
-  %% the following may cause problems if the eigenvalues are quite small
-  %% need an idea on how to choose an appropriate guess.
-  %[L S R] = svds(P,nvec,1e-6); 
-
+#  P = formP_full(H); %% check this!
+  P = formP(H);
+  
   %% since we do full svd we take only nvec right sing. vectors
 
-  [L S R] = svd(P);
+  [~, ~, R] = svd(P);
+  R = R(:,end:-1:end - nvec + 1);
 
-  [Ss indS] = sort(diag(S),'ascend'); 
-  R = R(:,indS);
+  M  = unpackM(R);
+  Q  = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-8));
 
-  W = unpacktri(R(:,1:nvec));
+  #W = unpacktri(R(:,1:nvec));
 
-#  [Q Di] = jacobi_fake(W,1e-8);
-
-  [Q L] = jacobi(W,1e-8);
-#  [Q L] = joint_diag(W,1e-8);
-
-  F = H * Q;
+  F = H * Q{1};
   [A O] = decompF(F);
 
 endfunction

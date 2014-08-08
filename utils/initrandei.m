@@ -1,11 +1,11 @@
-function EI = initrandei (dim, cplx, packing)
+function EI = initrandei (dim, cplx, isym)
 	 
-	 ## usage: EI = initrandei (dim, cplx, packing)
+	 ## usage: EI = initrandei (dim, cplx, isym)
 	 ## returns random integrals in the Mulliken or Dirak ordering 
 	 ##  
-	 ## packing = 1 Dirak
-	 ##        <> 1 Mulliken 
-	 ##
+	 ## isym = 1 Mulliken
+         ##           2 Dirak
+	 ##      
 
   if ( cplx == 1 )
     EI = rand(dim,dim,dim,dim) + i*rand(dim,dim,dim,dim);
@@ -15,7 +15,7 @@ function EI = initrandei (dim, cplx, packing)
 
   ET=EI;
 
-  if ( packing != 1 )
+  if ( isym == 1 )
   ## symmetrize (ij|kl) = (kl|ij) = (ji|lk)^* = (lk|ji)^*
 
     if ( cplx == 1 )
@@ -47,7 +47,7 @@ function EI = initrandei (dim, cplx, packing)
       
     endif
  
-  else
+  elseif ( isym == 2 )
 
   ## symmetrize <ij|kl> = <ji|lk> = <kl|ij>^* = <lk|ji>^*
 

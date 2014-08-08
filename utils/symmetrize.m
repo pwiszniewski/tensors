@@ -1,18 +1,18 @@
-function EI = symmetrize (ET, cplx, packing)
+function EI = symmetrize (ET, cplx, isym)
 	 
-	 ## usage: EI = symmetrize (ET, cplx, packing)
+	 ## usage: EI = symmetrize (ET, cplx, isym)
 	 ## symmetrizes integrals in the Mulliken or Dirak ordering 
 	 ## 
          ##    cplx = 1 apply complex 4 fold symmetry
 	 ##         = 0 apply real 8 fold symmetry
-	 ## packing = 1 Dirak
-	 ##        <> 1 Mulliken 
+	 ## isym = 1 Mulliken
+	 ##        2 Dirak 
 	 ##
 	 
   dim = size(ET,1);
   EI = zeros(dim,dim,dim,dim);
 
-  if ( packing != 1 )
+  if ( isym == 1 )
   ## symmetrize (ij|kl) = (kl|ij) = (ji|lk)^* = (lk|ji)^*
 
     if ( cplx == 1 )
@@ -44,7 +44,7 @@ function EI = symmetrize (ET, cplx, packing)
       
     endif
  
-  else
+  elseif ( isym == 2 )
 
   ## symmetrize <ij|kl> = <ji|lk> = <kl|ij>^* = <lk|ji>^*
 

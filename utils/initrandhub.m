@@ -1,10 +1,10 @@
-function [ EI, U ] = initrandhub (dim, cplx, packing)
+function [ EI, U ] = initrandhub (dim, cplx, isym)
 	 
-	 ## usage: EI U = initrandhub (dim, cplx, packing)
+	 ## usage: EI U = initrandhub (dim, cplx, isym)
 	 ## 
 	 ## 
-	 ## packing = 1 Dirak
-	 ##        <> 1 Mulliken 
+	 ## isym = 1 Mulliken
+	 ##        2 Dirak
 	 ##
 	 ## Initialize a random 4-index tensor EI of dimension 
          ## dim x dim x dim x dim and rank dim 
@@ -22,6 +22,6 @@ function [ EI, U ] = initrandhub (dim, cplx, packing)
  
  U = orth(U);
      
- EI = t2e(EI_on_site, U, packing);
+ EI = t2e(EI_on_site, U, isym);
 
 endfunction

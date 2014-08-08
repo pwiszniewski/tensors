@@ -1,6 +1,6 @@
-function [ EI, U Z ] = initrandgen (dim, u_cplx, z_cplx, z_mode, packing)
+function [ EI, U Z ] = initrandgen (dim, u_cplx, z_cplx, z_mode, isym)
 	 
-	 ## usage: EI U Z = initrandrec (dim, u_cplx, z_cplx, z_mode, packing)
+	 ## usage: EI U Z = initrandrec (dim, u_cplx, z_cplx, z_mode, isym)
 	 ## Builds integrals from rectangular factors, which was used
          ## in older numerical experiments
 	 ## 
@@ -16,8 +16,8 @@ function [ EI, U Z ] = initrandgen (dim, u_cplx, z_cplx, z_mode, packing)
 	 ##           5 - hermitian     (complex only)
 	 ##           6 - antihermitian (complex only)
 	 ##           7 - orthogonal/unitary
-	 ## packing = 1 Dirak
-	 ##           0 Mulliken 
+	 ## isym = 1 Mulliken
+	 ##        2 Dirak    
 
 	 
   if (z_cplx != 1)
@@ -84,7 +84,7 @@ function [ EI, U Z ] = initrandgen (dim, u_cplx, z_cplx, z_mode, packing)
 
  EI = zeros(dim,dim,dim,dim);
 
- if (packing == 0)
+ if (isym == 1)
    for j = 1 : dim
      for k = 1 : dim
        for l = 1 : dim
@@ -100,7 +100,7 @@ function [ EI, U Z ] = initrandgen (dim, u_cplx, z_cplx, z_mode, packing)
      end
    end
    
- else
+ elseif ( isym == 2 )
    for j = 1 : dim
      for k = 1 : dim
        for l = 1 : dim

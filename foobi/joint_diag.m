@@ -85,11 +85,12 @@ encore  = 1;
 cnt = 0;
 fprintf(stdout,'Joint diag reached. Matrix size %d, nmat %d\n',m,nm/m);
 %% prewhitening
-[V trash]    = eig(A(:,1:m)+A(:,1:m));
-A = V' * A;
-for p=1:m
+[V trash]    = eig(A(:,1:m));
+A = V^(-1) * A;
+for p=1:nm/m
     A(:,(1 + (p-1)*m):p*m) = A(:,(1 + (p-1)*m):p*m) * V;
 end
+#V = eye(m);
 
 while encore, encore=0;
   cnt += 1;

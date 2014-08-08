@@ -2,7 +2,8 @@ function t = multocum (t)
 	 
 	 ## usage: t = multocum (t)
 	 ## 
-	 ## reorder mulliken tensor to cumulant
+	 ## reorder (special) mulliken tensor to cumulant
+	 ## note that issues are possible if some complex symmetry is broken!!!!!!!!!!
 
   dim = size(t,1);
 

@@ -10,19 +10,16 @@ function [T, U, lambda] = initranddir (dimin, rnk, cplx)
 	 lambda = rand(rnk,1);
 
 	 if ( rnk >= dimin )
-	   U = rand(rnk,dimin); 
+	   U = rand(dimin,rnk); 
 	   if (cplx == 1)
-	     U += i*rand(rnk,dimin);
+	     U += i*rand(dimin,rnk);
 	   end
-	   U = orth(U);
-	   U = U';
 	 else
 	   U = rand(dimin); 
 	   if (cplx == 1)
 	     U += i*rand(dimin);
 	   end
 	   U = orth(U);
-	   U = U(:,1:rnk);
 	 end
 
 	 for j = 1:dimin

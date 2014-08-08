@@ -9,31 +9,17 @@ function [T, U, lambda] = initrandmul (dimin, rnk, cplx)
 	 
 	 lambda = rand(rnk,1);
 
-#	 if (mod(rank,2) == 0 )
-#	   lai = i*rand(rank/2,1);
-#	   lambda(1:rank/2)    = lambda(1:rank/2) + lai;
-#	   lambda(rank/2+1:rank) = conj(lambda(1:rank/2));
-#	 else
-#	   lai = i*rand((rank-1)/2,1);
-#	   lambda(1:(rank-1)/2)      = lambda(1:(rank-1)/2) + lai;
-#	   lambda((rank-1)/2+1:rank-1) = conj(lambda(1:(rank-1)/2));
-     
-#	 end
-
 	 if ( rnk >= dimin )
-	   U = rand(rnk,dimin); 
+	   U = rand(dimin,rnk); 
 	   if (cplx == 1)
-	     U += i*rand(rnk,dimin);
+	     U += i*rand(dimin,rnk);
 	   end
-	   U = orth(U);
-	   U = U';
 	 else
 	   U = rand(dimin); 
 	   if (cplx == 1)
 	     U += i*rand(dimin);
 	   end
 	   U = orth(U);
-	   U = U(:,1:rnk);
 	 end
 
 	 for j = 1:dimin

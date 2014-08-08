@@ -1,4 +1,4 @@
-function [ normd normof ] = diagnorm (EI, packing)
+function [ normd normof ] = diagnorm (EI, isym )
 	 
 	 ## usage: [ normd normof ] = bidiagnorm (EI)
 	 ## 

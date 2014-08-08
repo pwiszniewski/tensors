@@ -1,4 +1,4 @@
-function [ normd normof ] = bidiagnorm (EI, packing)
+function [ normd normof ] = bidiagnorm (EI, isym)
 	 
 	 ## usage: [ normd normof ] = bidiagnorm (EI)
 	 ## 
@@ -10,7 +10,7 @@ function [ normd normof ] = bidiagnorm (EI, packing)
 
   normd = 0;
 
-  if ( packing != 1 )
+  if ( isym == 1 )
 
   ## Mulliken ordering
 
@@ -25,7 +25,7 @@ function [ normd normof ] = bidiagnorm (EI, packing)
       end
     end
     
-  else
+  elseif ( isym == 2 )
  
   ## Dirak ordering
       
