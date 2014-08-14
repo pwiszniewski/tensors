@@ -2,8 +2,8 @@ function pass = checksym (EI, cplx, packing)
 	 
 	 ## usage: pass = checksym (EI, cplx, packing)
 	 ## 
-	 ## packing = 0 - Mulliken
-	 ##         = 1 - Dirak
+	 ## packing = 1 - Mulliken
+	 ##         = 2 - Dirak
 	 ##
 	 ## checks symmetries of the supplied EI
 	 ## pass = 0 - all expected symmetries found
@@ -22,7 +22,7 @@ function pass = checksym (EI, cplx, packing)
   pass = uint32(0);
   eps  = 1e-8; 
 
-  if ( packing != 1 )
+  if ( packing == 1 )
 
   ## check (ij|kl) = (kl|ij) = (ji|lk)^* = (lk|ji)^*
 
@@ -82,7 +82,7 @@ function pass = checksym (EI, cplx, packing)
       
     endif
 
-  else
+  elseif (packing == 2)
 
   ## check <ij|kl> = <ji|lk> = <kl|ij>^* = <lk|ji>^*
 

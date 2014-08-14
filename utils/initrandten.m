@@ -1,6 +1,6 @@
 function [T, U, lambda] = initrandten (dimin, rnk, isym, cplx)
 	 
-	 ## usage: [T, U, lambda] = initrandrec (dimin, rnk, cplx)
+	 ## usage: [T, U, lambda] = initrandrec (dimin, rnk, isym, cplx)
 	 ## 
 	 ## Builds 4-index tensor of a specified rank with the 
          ## symmetry requested by isym
@@ -13,22 +13,26 @@ function [T, U, lambda] = initrandten (dimin, rnk, isym, cplx)
 
 	 T = zeros(dimin,dimin,dimin,dimin);
 	 
-#	 lambda = rand(rnk,1);
-	 lambda = zeros(rnk,1);
-	 for j = 1:rnk
-	     lambda(j) = j;
-	 end
+	 lambda = rand(rnk,1);
+#	 lambda = ones(rnk,1);
+#	 lambda = zeros(rnk,1);
+#	 for j = 1:rnk
+#	     lambda(j) = j;
+#	 end
 
 	 if ( rnk > dimin )
-	   U = rand(dimin,rnk); 
+	   U = rand(dimin,rnk).*2 - 1; 
 	   if (cplx == 1)
-	     U += i*rand(dimin,rnk);
+	     U += i*rand(dimin,rnk).*2 - 1;
 	   end
-	   U = normc(U);
+
+	   for j = 1:rnk
+	       U(:,j) = U(:,j)/norm(U(:,j),'fro');
+	   end
 	 else
-	   U = rand(dimin); 
+	   U = rand(dimin).*2 - 1; 
 	   if (cplx == 1)
-	     U += i*rand(dimin);
+	     U += i*rand(dimin).*2 - 1;
 	   end
 	   U = orth(U);
 	 end

@@ -1,4 +1,4 @@
-function [A, Ds] = foobi2 (T,nvemax,emtresh)
+function [A, O] = foobi2 (T,isym,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -6,28 +6,26 @@ function [A, Ds] = foobi2 (T,nvemax,emtresh)
 	 
   dimin = size(T,4);
 
+  if (~exist('isym','var'))
+     isym = 0;
+     warning('using cumulant symmetry by default');
+  endif 
+
   if (~exist('emtresh','var'))
     emtresh = 1e-8;
   endif
-
-  if (~exist('nvemax','var'))
-    nvemax = 6;
-  endif
-  
-  if (nvemax > dimin*dimin)
-     nvemax = dimin*dimin;
-     warning('setting nvemax to maximal possible rank %d', dimin*dimin);
-  endif 
   
   C = reshape(T,dimin*dimin, dimin*dimin);
 
-  [U D] = eig(C);
+#  [U D] = eig(C);
+  [U, D, ~] = svd(C);
+
   [Ds indD] = sort(real(diag(D)),'descend'); 
   U = U(:,indD);
   
   %% truncation of non-significant eigenvalues and eigenvectors
   nvec = 1;
-  for j = 1:nvemax
+  for j = 1:dimin*dimin
       if ( abs(Ds(j)) < emtresh ) 
 	 nvec = j - 1;
 	 break
@@ -36,24 +34,18 @@ function [A, Ds] = foobi2 (T,nvemax,emtresh)
   end
 
   H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
+#  H =  U(:,1:nvec) * diag( Ds(1:nvec) );
 
   H = norm_herm(H);
   
   B = formB(H);
 
   %% pre-whitening
-  Qi = joint_offdiag(B(:,1:nvec),1e-6);
-  B = Qi' * B;
-  for j = 1:nvec:nvec*dimin*dimin*2
-      indB = [j:j+nvec-1];
-      B(:,indB) = B(:,indB) * Qi;
-  end
 
   %% joint off-diagonalization
   [Q D] = joint_offdiag(B,1e-8);
   
-  Q = Qi * Q;
   F = H * Q;
-  A = decompF(F);
+  [A O] = decompF(F);
 
 endfunction

@@ -1,6 +1,6 @@
 function [ T ] = buildten (U, lambda, isym)
 	 
-	 ## usage: [ T ] = buildcum (U, lambda)
+	 ## usage: [ T ] = buildten (U, lambda, isym)
 	 ## 
 	 ## Builds 4-index tensor of a specified rank and symmetry
 	 ##

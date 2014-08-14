@@ -22,9 +22,9 @@ function [A O] = foobi (T,isym,emtresh)
   C = reshape(T,dimin*dimin, dimin*dimin);
 
 #  if ( (isym == 0) || (isym == 2) )
-#    [U D] = eig(C);
-#  else
     [U, D, ~] = svd(C);
+#  else
+#    [U, D] = tfac(C);
 #  end
 
   %% Warning! have to check that eigenvalues are real each time
@@ -43,8 +43,8 @@ function [A O] = foobi (T,isym,emtresh)
 
   fprintf(stdout, 'foobi: The rank is %d\n', nvec);
 
-#  H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
-  H =  U(:,1:nvec) * diag( Ds(1:nvec) );
+  H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
+#  H =  U(:,1:nvec) * diag( Ds(1:nvec) );
 
   H = norm_herm(H);
 
@@ -56,10 +56,13 @@ function [A O] = foobi (T,isym,emtresh)
   [~, ~, R] = svd(P);
   R = R(:,end:-1:end - nvec + 1);
 
-  M  = unpackM(R);
-  Q  = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-8));
-
   #W = unpacktri(R(:,1:nvec));
+
+  M  = unpackM(R);
+  [Q out] = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-12));
+  if ( abs(out.fval(end)) > 1e-6 )
+     warning ('foobi: convergence problem in joint diagonalization, conv = %e, niter = %d\n', out.fval(end), length(out.fval));
+  end
 
   F = H * Q{1};
   [A O] = decompF(F);

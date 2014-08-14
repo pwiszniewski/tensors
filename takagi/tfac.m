@@ -11,7 +11,7 @@ function [Q D] = tfac (A,nSteps,verb)
 
   % get size of matrix
   if (~ issquare(A) || ~issymmetric(A,1e-8))
-    error ('A is not symmetric or square\n');
+    error ('A is not symmetric or square');
   else
     n = size(A,1);
   endif
