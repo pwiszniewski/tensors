@@ -21,11 +21,11 @@ function [A O] = foobi (T,isym,emtresh)
 
   C = reshape(T,dimin*dimin, dimin*dimin);
 
-#  if ( (isym == 0) || (isym == 2) )
+  if ( (isym == 0) || (isym == 2) )
     [U, D, ~] = svd(C);
-#  else
-#    [U, D] = tfac(C);
-#  end
+  elseif ( isym == 1 )
+    [U, D] = tfac(C);
+  endif
 
   %% Warning! have to check that eigenvalues are real each time
   [Ds indD] = sort(real(diag(D)),'descend'); 
@@ -49,7 +49,7 @@ function [A O] = foobi (T,isym,emtresh)
   H = norm_herm(H);
 
 #  P = formP_full(H); %% check this!
-  P = formP(H);
+  P = formP(H,isym);
   
   %% since we do full svd we take only nvec right sing. vectors
 
@@ -65,6 +65,6 @@ function [A O] = foobi (T,isym,emtresh)
   end
 
   F = H * Q{1};
-  [A O] = decompF(F);
+  [A O] = decompF(F,isym);
 
 endfunction
