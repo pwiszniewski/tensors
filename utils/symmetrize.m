@@ -1,6 +1,6 @@
-function EI = symmetrize (ET, cplx, isym)
+function EI = symmetrize (ET, isym, cplx)
 	 
-	 ## usage: EI = symmetrize (ET, cplx, isym)
+	 ## usage: EI = symmetrize (ET, isym, cplx)
 	 ## symmetrizes integrals in the Mulliken or Dirak ordering 
 	 ## 
          ##    cplx = 1 apply complex 4 fold symmetry

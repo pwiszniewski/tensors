@@ -1,4 +1,4 @@
-function [A O] = foobi (T,isym,emtresh)
+function [Ds A O] = foobi (T,isym,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 
@@ -59,7 +59,8 @@ function [A O] = foobi (T,isym,emtresh)
   #W = unpacktri(R(:,1:nvec));
 
   M  = unpackM(R);
-  [Q out] = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-12));
+  [Q out] = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-12,'MaxIter',1000));
+
   if ( abs(out.fval(end)) > 1e-6 )
      warning ('foobi: convergence problem in joint diagonalization, conv = %e, niter = %d\n', out.fval(end), length(out.fval));
   end
