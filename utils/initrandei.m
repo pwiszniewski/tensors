@@ -18,7 +18,7 @@ function EI = initrandei (dimin, rnk, isym, cplx)
   ET = reshape(EI,dimin*dimin, dimin*dimin);
   [V S VV] = svd(ET);
   ss = diag(S);
-  ss(end:-1:rnk) = 0;
+  ss(end:-1:rnk+1) = 0;
   ET = V * diag(ss) * VV';
   EI = reshape(ET,dimin,dimin,dimin,dimin);
 

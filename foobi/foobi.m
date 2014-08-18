@@ -1,4 +1,4 @@
-function [Ds A O] = foobi (T,isym,emtresh)
+function [A O] = foobi (T,isym,emtresh)
 	 
 	 ## usage: [U, lambda] = foobi (T)
 	 ## 

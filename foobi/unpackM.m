@@ -10,6 +10,7 @@ function M = unpackM (R)
 	 ## 
 	 ##
 	 ## As a remark, the size of R is r(r+1)/2 x r
+	 ## M is an order 3 tensor of size r*r*r
 
   nvec   = size(R,2);
   
