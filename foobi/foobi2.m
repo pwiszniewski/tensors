@@ -17,8 +17,11 @@ function [A, O] = foobi2 (T,isym,emtresh)
   
   C = reshape(T,dimin*dimin, dimin*dimin);
 
-#  [U D] = eig(C);
-  [U, D, ~] = svd(C);
+  if ( (isym == 0) || (isym == 2) )
+    [U, D, ~] = svd(C);
+  elseif ( isym == 1 )
+    [U, D] = tfac(C);
+  endif
 
   [Ds indD] = sort(real(diag(D)),'descend'); 
   U = U(:,indD);
@@ -33,6 +36,8 @@ function [A, O] = foobi2 (T,isym,emtresh)
       nvec = j;
   end
 
+  fprintf(stdout, 'foobi2: The rank is %d\n', nvec);
+
   H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
 #  H =  U(:,1:nvec) * diag( Ds(1:nvec) );
 
@@ -46,6 +51,6 @@ function [A, O] = foobi2 (T,isym,emtresh)
   [Q D] = joint_offdiag(B,1e-8);
   
   F = H * Q;
-  [A O] = decompF(F);
+  [A O] = decompF(F,isym);
 
 endfunction

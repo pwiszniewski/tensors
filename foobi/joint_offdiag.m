@@ -102,7 +102,7 @@ while encore, encore=0;
         c       = sqrt(0.5+angles(1)/2);
         s       = 0.5*(angles(2)-j*angles(3))/c; 
 
-        if ( (abs(s)>jthresh) && (cnt < 1000) ), %%% updates matrices A and V by a Givens%%% rotation
+        if ( (abs(s)>jthresh) && (cnt < 4000) ), %%% updates matrices A and V by a Givens%%% rotation
 
                 encore          = 1 ;
                 pair            = [p;q] ;

@@ -11,8 +11,23 @@ function EI = symmetrize (ET, isym, cplx)
 	 
   dim = size(ET,1);
   EI = zeros(dim,dim,dim,dim);
+  
+  if ( isym == 0 )
+  ## cumulant symmetries [ij|kl] = [ji|lk]^* = [lk|ji] = [kl|ij]^* 
+  ## real and complex cases are the same
 
-  if ( isym == 1 )
+      for i = 1 : dim
+	for j = 1 : dim
+	  for k = 1 : dim
+	    for l = 1 : dim
+	      EI(i,j,k,l) = (ET(i,j,k,l) + conj(ET(j,i,l,k)) + \
+			     ET(l,k,j,i) + conj(ET(k,l,i,j)))/4;		
+	    end
+	  end
+	end
+      end
+        
+  elseif ( isym == 1 )
   ## symmetrize (ij|kl) = (kl|ij) = (ji|lk)^* = (lk|ji)^*
 
     if ( cplx == 1 )

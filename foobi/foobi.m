@@ -1,6 +1,6 @@
 function [A O] = foobi (T,isym,emtresh)
 	 
-	 ## usage: [U, lambda] = foobi (T)
+	 ## usage: [A, O] = foobi (T, isym, emtresh)
 	 ## 
 	 ## Decompose 4-order tensor (Dirak symmetries)
 	 ## isym - symmetry of the input tensor
@@ -23,6 +23,7 @@ function [A O] = foobi (T,isym,emtresh)
 
   if ( (isym == 0) || (isym == 2) )
     [U, D, ~] = svd(C);
+##    [U, D] = eig(C);
   elseif ( isym == 1 )
     [U, D] = tfac(C);
   endif
