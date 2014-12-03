@@ -99,7 +99,7 @@ for j=1:nsteps
         while ((nEntry < 1) || ((normr < RSTOL) && (nRS < MAXRS)))
             nEntry = nEntry + 1;
             if (normr < RSTOL)  % small subdiagonal detected
-fprintf('\nSmall subdiagonal encountered. Restart ...');
+% fprintf('\nSmall subdiagonal encountered. Restart ...');
                 % orthogonalize r against all previous Q(:,1:j)
                 interNum = 1;   % one ortho interval [1:j]
                 low(interNum) = 1;

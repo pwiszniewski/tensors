@@ -22,13 +22,6 @@ function H = norm_herm (H)
     for k = 1:matsz + 1:veclen
 	if ( abs( H(k,j) ) != 0 )
 	  norm_vec(j) = conj( H(k,j) / abs(H(k,j)) );
-
-	  %% avoid multiplication by negative numbers, as it changes the
-	  %% direction of eigenvectors (POSSIBLY UNNECESSARY)
-	  if ( real(norm_vec(j)) < 0 )
-	     norm_vec(j) = -norm_vec(j);
-	  endif
-
 	  break
 
 	endif
