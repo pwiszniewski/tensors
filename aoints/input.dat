@@ -1,0 +1,36 @@
+molecule H2 {
+#O
+#H 1 R
+#H 1 R 2 A
+
+H 
+H 1 R
+R = .9
+#A = 104.5
+ 
+# atomic units
+# units au
+ 
+# Use c1 symmetry for simplicity
+symmetry c1
+}
+ 
+plugin_load("./aoints.so")
+ 
+set globals {
+basis sto-3g
+}
+ 
+set aoints {
+# Do the two electron integrals
+do_tei true
+ 
+# Save to file and choose name (saved in physical notation)
+savehdf5 true
+hdf5_filename "integrals.h5"
+ 
+# Also print the integrals (chemical notation)
+print_integrals true
+}
+ 
+plugin("aoints.so") 
