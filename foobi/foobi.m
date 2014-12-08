@@ -43,6 +43,8 @@ function [A O] = foobi (T,isym,emtresh)
   end
 
   fprintf(stdout, 'foobi: The rank is %d\n', nvec);
+  fprintf(stdout, 'foobi: the lowest kept eigenvalue: %f\n', Ds(nvec));
+  fflush(stdout);
 
   H =  U(:,1:nvec) * diag(sqrt( Ds(1:nvec) ));
 #  H =  U(:,1:nvec) * diag( Ds(1:nvec) );
@@ -60,7 +62,7 @@ function [A O] = foobi (T,isym,emtresh)
   #W = unpacktri(R(:,1:nvec));
 
   M  = unpackM(R);
-  [Q out] = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-12,'MaxIter',1000));
+  [Q out] = cpd3_sgsd(M,{eye(nvec),eye(nvec),eye(nvec)},struct('TolFun',1e-6,'MaxIter',5000));
 
   if ( abs(out.fval(end)) > 1e-6 )
      warning ('foobi: convergence problem in joint diagonalization, conv = %e, niter = %d\n', out.fval(end), length(out.fval));

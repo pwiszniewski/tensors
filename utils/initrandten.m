@@ -13,17 +13,18 @@ function [T, U, lambda] = initrandten (dimin, rnk, isym, cplx)
 
 	 T = zeros(dimin,dimin,dimin,dimin);
 	 
-#	 lambda = rand(rnk,1);
-	 lambda = ones(rnk,1);
-	 lambda = zeros(rnk,1);
-	 for j = 1:rnk
-	     lambda(j) = j;
-	 end
+	 #Current version works for positive lambdas only
+	 lambda = rand(rnk,1);
+#	 lambda = ones(rnk,1);
+#	 lambda = zeros(rnk,1);
+#	 for j = 1:rnk
+#	     lambda(j) = j;
+#	 end
 
 	 if ( rnk > dimin )
-	   U = rand(dimin,rnk); 
+	   U = rand(dimin,rnk)-0.5*ones(dimin,rnk); 
 	   if (cplx == 1)
-	     U += i*rand(dimin,rnk);
+	     U += i*rand(dimin,rnk)-0.5*i*ones(dimin,rnk);
 	   end
 
 	   for j = 1:rnk
@@ -31,9 +32,9 @@ function [T, U, lambda] = initrandten (dimin, rnk, isym, cplx)
 	   end
 
 	 else
-	   U = rand(dimin); 
+	   U = rand(dimin)-0.5*ones(dimin); 
 	   if (cplx == 1)
-	     U += i*rand(dimin);
+	     U += i*rand(dimin)-0.5*i*ones(dimin);
 	   end
 	   U = orth(U);
 	 end

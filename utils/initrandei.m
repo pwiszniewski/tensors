@@ -22,4 +22,6 @@ function EI = initrandei (dimin, rnk, isym, cplx)
   ET = V * diag(ss) * VV';
   EI = reshape(ET,dimin,dimin,dimin,dimin);
 
+  EI = symmetrize(EI,isym,cplx);
+
 endfunction
