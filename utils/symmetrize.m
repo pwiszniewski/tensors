@@ -63,7 +63,7 @@ function EI = symmetrize (ET, isym, cplx)
       end
       
   ## symmetrize (ij|kl) = (kl|ij) = (ji|lk) = (lk|ji) =
-  ## and also   (ji|kl) = (lk|ij) = (ij|lk) = (kl|ij) 
+  ## and also   (ji|kl) = (lk|ij) = (ij|lk) = (kl|ji) 
 
     else
       for i = 1 : dim
@@ -73,7 +73,7 @@ function EI = symmetrize (ET, isym, cplx)
 	      EI(i,j,k,l) = (ET(i,j,k,l) + ET(j,i,k,l) 
 			     + ET(i,j,l,k) + ET(j,i,l,k)
 			     + ET(k,l,i,j) +  ET(l,k,i,j) 
-			     + ET(k,l,j,i) + ET(l,k,j,i))/8;	
+			     + ET(k,l,i,j) + ET(l,k,j,i))/8;	
 	    end
 	  end
 	end

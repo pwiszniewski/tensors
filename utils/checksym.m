@@ -2,7 +2,8 @@ function pass = checksym (EI, cplx, packing)
 	 
 	 ## usage: pass = checksym (EI, cplx, packing)
 	 ## 
-	 ## packing = 1 - Mulliken
+	 ## packing = 0 - cumulants (cplx only)
+         ##         = 1 - Mulliken
 	 ##         = 2 - Dirak
 	 ##
 	 ## checks symmetries of the supplied EI
@@ -22,7 +23,39 @@ function pass = checksym (EI, cplx, packing)
   pass = uint32(0);
   eps  = 1e-8; 
 
-  if ( packing == 1 )
+  if ( packing == 0 )
+  
+      for i = 1 : dim
+	for j = 1 : dim
+	  for k = 1 : dim
+	    for l = 1 : dim
+	      if ( abs( EI(i,k,j,l) - EI(i,j,k,l) ) > eps )
+		pass = bitset(pass,1);
+	      endif
+	      if ( abs( EI(l,j,k,i) - EI(i,j,k,l) ) > eps )
+		 pass = bitset(pass,2);
+	      endif
+	      if ( abs( EI(l,k,j,i) - EI(i,j,k,l) ) > eps )
+		 pass = bitset(pass,3);
+	      endif
+	      if ( abs( EI(j,i,l,k) - conj(EI(i,j,k,l)) ) > eps )
+		 pass = bitset(pass,4);
+	      endif
+	      if ( abs( EI(j,l,i,k) - conj(EI(i,j,k,l)) ) > eps )
+		 pass = bitset(pass,5);
+	      endif
+	      if ( abs( EI(k,i,l,j) - conj(EI(i,j,k,l)) ) > eps )
+		 pass = bitset(pass,6);
+	      endif
+	      if ( abs( EI(k,l,i,j) - conj(EI(i,j,k,l)) ) > eps )
+		 pass = bitset(pass,7);
+	      endif
+	    end
+	  end
+	end
+      end
+     
+  elseif ( packing == 1 )
 
   ## check (ij|kl) = (kl|ij) = (ji|lk)^* = (lk|ji)^*
 

@@ -79,6 +79,7 @@ PsiReturnType aoints(Options &options)
 
     fprintf(outfile, "\n    Nuclear repulsion energy: %16.8f\n\n", nucrep);
     fprintf(outfile, "\n    Number of electrons: %d\n\n", nelectrons);
+    fprintf(outfile, "\n    Number of basis functions: %d\n\n", nbf[0]);
     
     // The matrix factory can create matrices of the correct dimensions...
     boost::shared_ptr<MatrixFactory> factory(new MatrixFactory);
@@ -144,7 +145,19 @@ PsiReturnType aoints(Options &options)
       status = H5Sclose(dataspace_id);
       HDF5_STATUS_CHECK(status);
 
+      // Save the size of irrep as 1-1 array (Octave HDF5 parser is ugly)
+      hsize_t dimarray = 1;
+      dataspace_id = H5Screate_simple(1, &dimarray, NULL);
+
+      dataset_id = H5Dcreate(group_id, "Nbf", H5T_STD_I32LE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+      status = H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, &nbf[0] );
+      HDF5_STATUS_CHECK(status);
+      status = H5Dclose(dataset_id);
+      HDF5_STATUS_CHECK(status);
       
+      status = H5Sclose(dataspace_id);
+      HDF5_STATUS_CHECK(status);
+      /*
       hsize_t dimarray = nbf[0] * nbf[0];
       dataspace_id = H5Screate_simple(1, &dimarray, NULL);
 
@@ -169,6 +182,7 @@ PsiReturnType aoints(Options &options)
       
       status = H5Sclose(dataspace_id);
       HDF5_STATUS_CHECK(status);
+      */
     }
     
     if(doTei){
@@ -202,15 +216,37 @@ PsiReturnType aoints(Options &options)
 	  int r = intIter.k();
 	  int s = intIter.l();
 	  
-	  if(print)
-	    fprintf(outfile, "\t(%2d %2d | %2d %2d) = %20.15f\n",
-		    p, q, r, s, buffer[intIter.index()]);
+	  //	  if(print)
+	  //  fprintf(outfile, "\t(%2d %2d | %2d %2d) = %20.15f\n",
+	  //	    p, q, r, s, buffer[intIter.index()]);
 
 	  // PSI is chemical notation, we get: (pr|V|qs)
 	  // so: V_abcd = V(a*nmo+b,c*nmo+d)
 
 	  if(savehdf5){
-	    /* int idx1 = p * nbf[0] + r;
+	    //Cumulant order
+	    int idx1 = p * nbf[0] + q;
+	    int idx2 = r * nbf[0] + s;
+	    VMat->set(idx1, idx2, buffer[intIter.index()]);
+	    VMat->set(idx2, idx1, buffer[intIter.index()]);
+	    
+	    idx1 = p * nbf[0] + r;
+	    idx2 = q * nbf[0] + s;
+	    VMat->set(idx1, idx2, buffer[intIter.index()]);
+	    VMat->set(idx2, idx1, buffer[intIter.index()]);
+	    
+	    idx1 = s * nbf[0] + r;
+	    idx2 = q * nbf[0] + p;
+	    VMat->set(idx1, idx2, buffer[intIter.index()]);
+	    VMat->set(idx2, idx1, buffer[intIter.index()]);
+
+	    idx1 = s * nbf[0] + q;
+	    idx2 = r * nbf[0] + p;
+	    VMat->set(idx1, idx2, buffer[intIter.index()]);
+	    VMat->set(idx2, idx1, buffer[intIter.index()]);
+
+	    /*
+	    int idx1 = p * nbf[0] + r;
 	    int idx2 = q * nbf[0] + s;
 	    VMat->set(idx1, idx2, buffer[intIter.index()]);
 	    VMat->set(idx2, idx1, buffer[intIter.index()]);
@@ -219,7 +255,6 @@ PsiReturnType aoints(Options &options)
 	    idx2 = s * nbf[0] + q;
 	    VMat->set(idx1, idx2, buffer[intIter.index()]);
 	    VMat->set(idx2, idx1, buffer[intIter.index()]);
-	    
 	    
 	    // with real orbitals we can swap r and s
 	    idx1 = q * nbf[0] + r;
@@ -233,7 +268,7 @@ PsiReturnType aoints(Options &options)
 	    VMat->set(idx2, idx1, buffer[intIter.index()]);
 	    */
 	    //Mulliken order
-	    int idx1 = p * nbf[0] + q;
+	    /* int idx1 = p * nbf[0] + q;
 	    int idx2 = r * nbf[0] + s;
 	    VMat->set(idx1, idx2, buffer[intIter.index()]);
 	    VMat->set(idx2, idx1, buffer[intIter.index()]);
@@ -253,7 +288,7 @@ PsiReturnType aoints(Options &options)
 	    idx2 = s * nbf[0] + p;
 	    VMat->set(idx1, idx2, buffer[intIter.index()]);
 	    VMat->set(idx2, idx1, buffer[intIter.index()]);
-
+	    */
 	  }
 
 	  ++count;
