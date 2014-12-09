@@ -106,9 +106,9 @@ function EI = symmetrize (ET, isym, cplx)
 	  for k = 1 : dim
 	    for l = 1 : dim
 	      EI(i,j,k,l) = (ET(i,j,k,l) + ET(j,i,l,k) + 
-			     ET(k,l,i,j) + ET(l,k,j,i) + 
-                             ET(k,j,i,l) + ET(l,i,j,k) +  
-                             ET(i,l,k,j) + ET(j,k,l,i) ) / 8;
+			     ET(i,l,k,j) + ET(l,i,j,k) + 
+                             ET(k,j,i,l) + ET(j,k,l,i) +  
+                             ET(k,l,i,j) + ET(l,k,j,i) ) / 8;
 
 	    end
 	  end
