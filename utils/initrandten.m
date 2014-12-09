@@ -37,6 +37,7 @@ function [T, U, lambda] = initrandten (dimin, rnk, isym, cplx)
 	     U += i*rand(dimin)-0.5*i*ones(dimin);
 	   end
 	   U = orth(U);
+	   U = U(:,1:rnk);
 	 end
 	 
 	 if ( isym == 0 )

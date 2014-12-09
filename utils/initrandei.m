@@ -1,27 +1,32 @@
-function EI = initrandei (dimin, rnk, isym, cplx)
+function EI = initrandei (dim, rnk, isym, cplx, ee)
 	 
-	 ## usage: EI = initrandei (dimin, rnk, isym, cplx)
+	 ## usage: EI = initrandei (dim, rnk, isym, cplx, ee)
 	 ## returns random integrals in the Mulliken or Dirak ordering 
 	 ##  
-	 ## isym = 1 Mulliken
+	 ## isym = 0 supersymmetric cumulant
+         ##        1 Mulliken
          ##        2 Dirak
-	 ##      
+	 ## ee - maximal norm difference
 
   if ( cplx == 1 )
-    EI = rand(dimin,dimin,dimin,dimin) + i*rand(dimin,dimin,dimin,dimin);
+    EI = rand(dim,dim,dim,dim) + i*rand(dim,dim,dim,dim);
   else
-    EI = rand(dimin,dimin,dimin,dimin);
+    EI = rand(dim,dim,dim,dim);
   endif
 
-  EI = symmetrize(EI,isym,cplx);
+  ET = symmetrize(EI,isym,cplx);
+  [EI trunc] = trunctensvd(ET,rnk);
+  ET = symmetrize(EI,isym,cplx);
 
-  ET = reshape(EI,dimin*dimin, dimin*dimin);
-  [V S VV] = svd(ET);
-  ss = diag(S);
-  ss(end:-1:rnk+1) = 0;
-  ET = V * diag(ss) * VV';
-  EI = reshape(ET,dimin,dimin,dimin,dimin);
+  count = 0;
+  while ( (trunc > ee) && (count < 1000))
 
-  EI = symmetrize(EI,isym,cplx);
+    [EI trunc]= trunctensvd(ET,rnk);
+    ET = symmetrize(EI,isym,cplx);
+    count += 1;
 
+  endwhile
+  
+  printf("initrandei: %d iterations needed\n", count);
+  
 endfunction

@@ -5,8 +5,10 @@ function EI = symmetrize (ET, isym, cplx)
 	 ## 
          ##    cplx = 1 apply complex 4 fold symmetry
 	 ##         = 0 apply real 8 fold symmetry
-	 ## isym = 1 Mulliken
-	 ##        2 Dirak 
+	 ##
+         ##    isym = 0 - supersymm
+	 ##           1 Mulliken
+	 ##           2 Dirak 
 	 ##
 	 
   dim = size(ET,1);
@@ -15,18 +17,36 @@ function EI = symmetrize (ET, isym, cplx)
   if ( isym == 0 )
   ## cumulant symmetries [ij|kl] = [ji|lk]^* = [lk|ji] = [kl|ij]^* 
   ## real and complex cases are the same
-
-      for i = 1 : dim
-	for j = 1 : dim
-	  for k = 1 : dim
-	    for l = 1 : dim
-	      EI(i,j,k,l) = (ET(i,j,k,l) + conj(ET(j,i,l,k)) + \
-			     ET(l,k,j,i) + conj(ET(k,l,i,j)))/4;		
-	    end
-	  end
-	end
-      end
-        
+     if ( cplx == 1 )
+       for i = 1 : dim
+	 for j = 1 : dim
+	   for k = 1 : dim
+	     for l = 1 : dim
+	       EI(i,j,k,l) = (ET(i,j,k,l) + ET(l,j,k,i) + ET(l,k,j,i) + ET(i,k,j,l) 
+			      + conj(ET(j,i,l,k)) + conj(ET(k,i,l,j)) + conj(ET(k,l,i,j)) + conj(ET(j,l,i,k))) / 8;		
+	     end
+	   end
+	 end
+       end
+       
+     else
+       for i = 1 : dim
+	 for j = 1 : dim
+	   for k = 1 : dim
+	     for l = 1 : dim
+	       EI(i,j,k,l) = (ET(i,j,k,l) + ET(j,i,k,l) + ET(i,k,j,l)
+			      + ET(j,k,i,l)+ ET(k,i,j,l) + ET(k,j,i,l)
+			      + ET(i,j,l,k)+ ET(j,i,l,k) + ET(i,k,l,j)
+			      + ET(j,k,l,i)+ ET(k,i,l,j) + ET(k,j,l,i)
+			      + ET(i,l,j,k)+ ET(j,l,i,k) + ET(i,l,k,j)
+			      + ET(j,l,k,i)+ ET(k,l,i,j) + ET(k,l,j,i)
+			      + ET(l,i,j,k)+ ET(l,j,i,k) + ET(l,i,k,j)
+			      + ET(l,j,k,i)+ ET(l,k,i,j) + ET(l,k,j,i)) / 24;		
+	     end
+	   end
+	 end
+       end
+     endif
   elseif ( isym == 1 )
   ## symmetrize (ij|kl) = (kl|ij) = (ji|lk)^* = (lk|ji)^*
 
@@ -50,8 +70,7 @@ function EI = symmetrize (ET, isym, cplx)
 	for j = 1 : dim
 	  for k = 1 : dim
 	    for l = 1 : dim
-	      EI(i,j,k,l) = (ET(i,j,k,l) + ET(k,l,i,j) + \
-			     ET(j,i,l,k) + ET(l,k,j,i))/4;	
+	      EI(i,j,k,l) = (ET(i,j,k,l) + ET(j,i,k,l) + ET(i,j,l,k) + ET(j,i,l,k) + ET(k,l,i,j) +  ET(l,k,i,j) + ET(k,l,j,i) + ET(l,k,j,i) )/8;	
 	    end
 	  end
 	end
@@ -83,8 +102,10 @@ function EI = symmetrize (ET, isym, cplx)
 	for j = 1 : dim
 	  for k = 1 : dim
 	    for l = 1 : dim
-	      EI(i,k,j,l) = (ET(i,k,j,l) + ET(k,i,l,j) + \
-			     ET(j,l,i,k) + ET(l,j,k,i))/4;		
+	      EI(i,j,l,k) = (ET(i,j,k,l) + ET(i,l,k,j) + \
+			     ET(k,j,i,l) + ET(k,l,i,j) + \
+                             ET(j,i,l,k) + ET(l,i,j,k) + \ 
+                             ET(j,k,l,i) + ET(l,k,j,i) ) / 8;
 
 	    end
 	  end
